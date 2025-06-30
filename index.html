@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Control de Calificaciones</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Control de Calificaciones</h1>
+        
+        <div class="controls">
+            <div class="file-import">
+                <label for="fileInput" class="file-label">
+                    Importar Excel
+                    <input type="file" id="fileInput" accept=".xlsx" />
+                </label>
+            </div>
+            <button id="btnExportar">Exportar a Excel</button>
+            <button id="btnAgregarAlumno">Agregar Alumno</button>
+            <button id="btnGestionMaterias">Gestionar Materias</button>
+        </div>
+        
+        <div id="tablaCalificaciones" class="alumnos-container"></div>
+        
+        <!-- Modal para agregar alumno -->
+        <div id="modalAlumno" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Nuevo Alumno</h2>
+                <form id="formAlumno">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="control">Número de Control:</label>
+                        <input type="text" id="control" required>
+                    </div>
+                    <button type="submit">Guardar</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Modal para gestionar materias -->
+        <div id="modalMaterias" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Gestión de Materias</h2>
+                <div id="listaMaterias" class="lista-materias"></div>
+                <div class="agregar-materia">
+                    <input type="text" id="nuevaMateria" placeholder="Nombre de la materia">
+                    <button id="btnAgregarMateria">Agregar Materia</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librerías -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
