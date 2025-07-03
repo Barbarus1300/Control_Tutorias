@@ -156,13 +156,14 @@ button:hover {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 5% auto; /* Ajusta este valor para mover el modal más hacia arriba */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     max-width: 500px;
     border-radius: 8px;
 }
+
 
 .close {
     color: #aaa;

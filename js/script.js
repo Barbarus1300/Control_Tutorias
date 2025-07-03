@@ -328,6 +328,7 @@ function exportarExcel() {
         datosExportar.push([alumno.nombre, '', ...Array(alumno.materias.length).fill('')]);
         datosExportar.push([alumno.control, '', ...Array(alumno.materias.length).fill('')]);
 
+
         for (let unidad of ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']) {
             const filaUnidad = ['', unidad];
             alumno.materias.forEach(materia => {
@@ -433,6 +434,7 @@ function mostrarEstadisticas() {
             <button id="btnAplicarFiltros">Aplicar Filtros</button>
         </div>
         <div id="resultadoEstadisticas"></div>
+        <canvas id="graficoEstadisticas"></canvas> <!-- Aquí se mostrará el gráfico -->
     `;
 
     contenidoEstadisticas.innerHTML = html;
@@ -455,6 +457,9 @@ function aplicarFiltrosEstadisticas() {
 
     let total = 0, reprobados = 0, desercion = 0, sumatoria = 0;
 
+    // Datos para el gráfico
+    const estadisticasPorMateria = {}; // Para almacenar los resultados por materia
+
     alumnos.forEach(alumno => {
         if (alumnoSeleccionado && alumno.nombre !== alumnoSeleccionado) return;
 
@@ -475,6 +480,17 @@ function aplicarFiltrosEstadisticas() {
                 sumatoria += promedio;
                 total++;
                 if (promedio < 70) reprobados++;
+
+                // Acumulamos estadísticas por materia
+                if (!estadisticasPorMateria[materia.nombre]) {
+                    estadisticasPorMateria[materia.nombre] = { aprobados: 0, reprobados: 0 };
+                }
+
+                if (promedio < 70) {
+                    estadisticasPorMateria[materia.nombre].reprobados++;
+                } else {
+                    estadisticasPorMateria[materia.nombre].aprobados++;
+                }
             }
         });
     });
@@ -509,4 +525,55 @@ function aplicarFiltrosEstadisticas() {
             </tbody>
         </table>
     `;
+
+    // Crear gráfico con los datos de estadística
+    const materias = Object.keys(estadisticasPorMateria);
+    const aprobados = materias.map(m => estadisticasPorMateria[m].aprobados);
+    const reprobadosPorMateria = materias.map(m => estadisticasPorMateria[m].reprobados);
+
+    const ctx = document.getElementById('graficoEstadisticas').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: materias,
+            datasets: [{
+                label: 'Aprobados',
+                data: aprobados,
+                backgroundColor: '#27ae60',
+                borderColor: '#1e8449',
+                borderWidth: 1
+            }, {
+                label: 'Reprobados',
+                data: reprobadosPorMateria,
+                backgroundColor: '#e74c3c',
+                borderColor: '#c0392b',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            const label = tooltipItem.dataset.label || '';
+                            const value = tooltipItem.raw || 0;
+                            return `${label}: ${value}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
